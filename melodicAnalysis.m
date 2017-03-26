@@ -9,23 +9,12 @@ function [ PD,PID ] = melodicAnalysis(nmat,strPD,strPID)
 bpm = gettempo(nmat);
 PD = pcdist1(nmat);
 figure(1);
-plotdist(PD)
+subplot(1,2,1), plotdist(PD)
 title(strPD)
 xlabel('Pitch classes')
 
-for i=1:size(nmat,1)-1
-    
-    if ((nmat(i,1) + nmat(i,2)) >= nmat(i+1,1))
-        nmat(i+1,1)= nmat(i,1) + nmat(i,2) + 0.02;
-        nmat(i+1,6) = nmat(i+1,1)*(60/bpm);       
-    end
-    nmat(i,3) = 1;
-end
-nmat(end,3) = 1;
-
 PID = ivdist1(nmat);
-figure(2);
-plotdist(PID)
+subplot(1,2,2), plotdist(PID)
 title(strPID)
 xlabel('Pitch interval - from descending perfect octave to ascending perfect octave')
 

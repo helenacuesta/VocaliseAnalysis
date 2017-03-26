@@ -18,11 +18,12 @@ for i=1:length(nmat1)-frameSize
     dst(k) = meldistance(win_mel_A,win_mel_new,'contour','cosine');
 end
 
+dst = abs(dst);
 dst = dst / max(dst); % normalize values
 
 % plot(dst)
 
-sim_measure = mean(dst);
+sim_measure = mean(dst(~isnan(dst)));
 
 end
 

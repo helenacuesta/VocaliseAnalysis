@@ -33,6 +33,9 @@ time_boundaries = [0,93;...
 nmat_ch0 = getmidich(nmat,0); % get first channel - cello melody
 nmat_ch1 = getmidich(nmat,1); % get second channel - piano accompaniment
 
+bpm = gettempo(nmat);
+nmat_ch0 = checkOverlap(nmat_ch0,bpm);
+
 % Split parts A, AA, B, BB, C
 nmat_A = onsetwindow(nmat_ch0,time_boundaries(1,1),time_boundaries(1,2),'sec');
 nmat_AA = onsetwindow(nmat_ch0,time_boundaries(2,1),time_boundaries(2,2),'sec');
@@ -40,7 +43,7 @@ nmat_B = onsetwindow(nmat_ch0,time_boundaries(3,1),time_boundaries(3,2),'sec');
 nmat_BB = onsetwindow(nmat_ch0,time_boundaries(4,1),time_boundaries(4,2),'sec');
 nmat_C = onsetwindow(nmat_ch0,time_boundaries(5,1),time_boundaries(5,2),'sec');
 
-bpm = gettempo(nmat);
+
 
 % extract pitch-class and pitch interval distributions
 melodyAnalysis;
@@ -64,3 +67,10 @@ new_C = useHMM(nmat_C,trans_mat_C,pitch_class_dist_C);
 new_midi = [new_A;new_AA;new_B;new_BB;new_C];
 filename = 'vocalise_new_comp.midi';
 writemidi(new_midi,filename,bpm);
+
+%% Similarity analysis
+% Compute melodic similarity based on the melodic contours between Vocalise
+% and the new composition
+originalmidi = [nmat_A;nmat_AA;nmat_B;nmat_BB;nmat_C];
+sim = melodicSimilarity(originalmidi,new_midi);
+strcat({'The dissimilarity between the new composition and Vocalise is '},num2str(sim))
